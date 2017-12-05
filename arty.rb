@@ -20,7 +20,9 @@ class Arty
       response_object = JSON.parse(response.body)
       for object in response_object["results"]
         if object["artistName"]
-          @artwork_urls.push(object["artworkUrl100"])
+          url = object["artworkUrl100"]
+          url = url.sub("100x100", "600x600")
+          @artwork_urls.push(url)
           break
         end
       end
@@ -43,23 +45,20 @@ class Arty
     end
 
     image = i.montage do |mont|
-      mont.geometry = "200x200"
+      mont.geometry = "400x400"
     end
 
     width = image.columns
 
-    puts "WIDTH #{width}"
-
-    image = image.distort(Magick::ScaleRotateTranslateDistortion, [10]) do
-      self.define "distort:viewport", "0x0+0+0"
-    end
+    image.rotate!(10)
+    image.shave!(width/7, width/7)
 
     image.write("./tmp/output.png")
   end
 end
 
 
-a = Arty.new(["Arctic Monkeys", "The Libertines", "The Kooks", "The Strokes"])
+a = Arty.new(["Daft Punk", "Kavinsky", "Justice", "Empire of the Sun"])
 a.find_artwork()
 a.fetch_images()
 a.generate_montage()
