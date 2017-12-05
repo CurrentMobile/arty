@@ -50,8 +50,15 @@ class Arty
 
     width = image.columns
 
-    image.rotate!(10)
-    image.shave!(width/7, width/7)
+    degrees = 5
+
+    image.rotate!(degrees)
+    radians = degrees * Math::PI / 180
+
+    trim = Math.sin(radians) * width
+
+    image.shave!(trim, trim)
+
 
     image.write("./tmp/output.png")
   end
