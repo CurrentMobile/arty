@@ -1,2 +1,4 @@
 .DS_Store
 tmp/*.png
+tmp/radio
+radio_stations.rb

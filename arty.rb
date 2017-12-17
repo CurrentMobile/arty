@@ -1,6 +1,7 @@
 require "HTTParty"
 require 'digest'
 require 'rmagick'
+require 'jaro_winkler'
 
 class Arty
 
@@ -16,16 +17,36 @@ class Arty
   # It will simply omitted from the resulting @artwork_urls array
   def find_artwork
     for artist in @artists
-      response = HTTParty.get("https://itunes.apple.com/search?term=#{artist}")
+      response = HTTParty.get(URI.encode("https://itunes.apple.com/search?term=#{artist}"))
       response_object = JSON.parse(response.body)
       for object in response_object["results"]
-        if object["artistName"]
+        if JaroWinkler.distance(object["artistName"], artist) > 0.95 && object["collectionArtistName"] == nil && object["primaryGenreName"] != "Soundtrack"
           url = object["artworkUrl100"]
           url = url.sub("100x100", "600x600")
           @artwork_urls.push(url)
           break
         end
       end
+    end
+
+    while @artwork_urls.count < 4
+
+      random_artist = @artists.sample
+      response = HTTParty.get(URI.encode("https://itunes.apple.com/search?term=#{random_artist}"))
+      response_object = JSON.parse(response.body)
+
+      for object in response_object["results"]
+        if JaroWinkler.distance(object["artistName"], random_artist) > 0.95 && object["collectionArtistName"] == nil && object["primaryGenreName"] != "Soundtrack"
+          url = object["artworkUrl100"]
+          url = url.sub("100x100", "600x600")
+
+          if @artwork_urls.include?(url) == false
+            @artwork_urls.push(url)
+            break
+          end
+        end
+      end
+
     end
   end
 
@@ -50,7 +71,7 @@ class Arty
 
     width = image.columns
 
-    degrees = 5
+    degrees = 7
 
     image.rotate!(degrees)
     radians = degrees * Math::PI / 180
@@ -60,12 +81,9 @@ class Arty
     image.shave!(trim, trim)
 
 
-    image.write("./tmp/output.png")
+    image.write("./tmp/output.jpeg") {
+      self.quality = 100
+      self.format = 'JPEG'
+    }
   end
 end
-
-
-a = Arty.new(["Daft Punk", "Kavinsky", "Justice", "Empire of the Sun"])
-a.find_artwork()
-a.fetch_images()
-a.generate_montage()
