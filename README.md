@@ -10,5 +10,5 @@ a.generate_montage()
 ```
 
 ## Output
-Running the above code, produces an image like this:
+Running the above code, produces an image like this at `./tmp/output.jpeg`
 ![output](https://user-images.githubusercontent.com/1433713/34084686-5a54b3e0-e34a-11e7-8e79-e663cdfb8aa5.jpeg)
