@@ -59,6 +59,9 @@ class Arty
   end
 
   def generate_montage
+    self.find_artwork()
+    self.fetch_images()
+
     i = Magick::ImageList.new
 
     for image_url in @artwork_urls
