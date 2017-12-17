@@ -3,3 +3,4 @@ source "https://rubygems.org"
 
 gem "httparty"
 gem "rmagick"
+gem "jaro_winkler"
