@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "arty"
-  s.version     = "0.0.1"
+  s.version     = "0.0.2"
   s.date        = "2018-04-24"
   s.summary     = "Arty"
   s.description = "A tool to generate montage images for album art"

@@ -12,6 +12,8 @@ require 'arty'
 
 a = Arty.new(["Daft Punk", "Kavinsky", "Empire of the Sun", "Justice"])
 a.generate_montage()
+# or to specify an output file
+a.generate_montage("/path/to/file.jpeg")
 ```
 
 ## Output
