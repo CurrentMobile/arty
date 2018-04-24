@@ -58,7 +58,7 @@ class Arty
     end
   end
 
-  def generate_montage
+  def generate_montage(output_file_path = nil)
     self.find_artwork()
     self.fetch_images()
 
@@ -83,8 +83,11 @@ class Arty
 
     image.shave!(trim, trim)
 
+    if output_file_path.nil?
+      output_file_path = "./tmp/output.jpeg"
+    end
 
-    image.write("./tmp/output.jpeg") {
+    image.write(output_file_path) {
       self.quality = 100
       self.format = 'JPEG'
     }
